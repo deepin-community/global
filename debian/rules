@@ -1,4 +1,42 @@
 #!/usr/bin/make -f
 
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/dpkg/pkg-info.mk
+
 %:
 	dh $@
+
+override_dh_autoreconf:
+	dh_autoreconf sh reconf.sh
+
+override_dh_auto_configure:
+	dh_auto_configure -- --with-exuberant-ctags=/usr/bin/ctags-exuberant 	\
+		--with-universal-ctags=/usr/bin/ctags-universal 		\
+		--disable-static 						\
+		--datadir=/usr/share/$(DEB_SOURCE) --with-sqlite3
+
+override_dh_auto_install:
+	dh_auto_install
+	mv $(CURDIR)/debian/$(DEB_SOURCE)/usr/share/$(DEB_SOURCE)/gtags/gtags.el 	\
+		$(CURDIR)/debian/$(DEB_SOURCE)/usr/share/emacs/site-lisp/$(DEB_SOURCE)
+
+	rm debian/$(DEB_SOURCE)/usr/lib/$(DEB_HOST_MULTIARCH)/gtags/*.la
+	for x in AUTHORS BUILD_TOOLS ChangeLog COPYING COPYING.LIB DONORS		\
+		 elvis-2.2_0.patch elvis.rc FAQ geco.rc gtags.conf			\
+		 gtags-cscope.vim gtags.pl gtags.vim INSTALL LICENSE NEWS		\
+		 PLUGIN_HOWTO* README* SERVERSIDE_HOWTO THANKS				\
+		 vim74-gtags-cscope.patch; do						\
+		rm -f debian/$(DEB_SOURCE)/usr/share/$(DEB_SOURCE)/gtags/$$x;		\
+	done
+
+	for x in elvis-global global-client gtags-client htags-client less-global	\
+		maps2conf.pl;								\
+	do										\
+		rm -f debian/$(DEB_SOURCE)/usr/share/$(DEB_SOURCE)/gtags/script/$$x;	\
+	done
+	rm -fr debian/$(DEB_SOURCE)/var
