@@ -1,15 +1,37 @@
-Source: template-repository
-Section: unknown
+Source: global
+Section: devel
 Priority: optional
-Maintainer: Tsic404 <liuheng@deepin.org>
-Build-Depends: debhelper (>= 11)
-Standards-Version: 4.1.3
-Homepage: https://github.com/deepin-community/template-repository
-#Vcs-Browser: https://salsa.debian.org/debian/deepin-community-template-repository
-#Vcs-Git: https://salsa.debian.org/debian/deepin-community-template-repository.git
+Build-Depends: debhelper-compat (= 12),
+ texinfo,
+ libncurses-dev, libltdl-dev, libsqlite3-dev,
+ emacsen-common, flex, bison, gperf,
+ libtool-bin, python3-minimal
+Maintainer: Punit Agrawal <punit@debian.org>
+Homepage: https://www.gnu.org/software/global/global.html
+Vcs-Git: https://github.com/punitagrawal/global.git
+Vcs-Browser: https://github.com/punitagrawal/global
+Standards-Version: 4.6.2
 
-Package: template-repository
+Package: global
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Depends: ${shlibs:Depends}, emacsen-common, ${misc:Depends}
+Recommends: python3
+Suggests: lynx | www-browser, doxygen (>=1.4.3), id-utils, exuberant-ctags, python3-pygments
+Description: Source code search and browse tools
+ GNU GLOBAL is a source code tag system that works the same way across
+ diverse environments. Currently, it supports the following:
+ .
+   o command line, and the 'globash' query subshell.
+   o vim plugin, and support for other vi clones.
+   o less
+   o emacs
+   o web browser
+ .
+ Supported languages are C, C++, yacc and Java.
+ You can locate a specified function in the source files and move
+ there easily. It is especially useful for hacking large projects
+ containing many subdirectories, many '#ifdef' and many main()
+ functions, like X or kernel source.
+ .
+ Doxygen now supports using global as its source browser, with the
+ USE_HTAGS option.
